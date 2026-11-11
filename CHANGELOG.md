@@ -2,6 +2,15 @@
 
 Notable changes to this project are documented here.
 
+## 0.1.4
+
+### Added
+
+- `seo_robots` page attribute (SEO Kit set): `nofollow`, `noarchive`,
+  `nosnippet` and `noimageindex`, output as a robots meta tag. `noindex` stays
+  with core's "Exclude From Search Index" attribute, and the canonical tag stays
+  with core.
+
 ## 0.1.2
 
 ### Changed

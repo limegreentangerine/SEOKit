@@ -39,6 +39,20 @@ list of objects, or an object with an `@graph` list. Any nested `@context` is
 dropped. A custom node with the same `@id` as a generated node replaces it;
 other nodes are appended. Invalid JSON is logged and skipped, never output.
 
+## Robots directives
+
+The **Robots Directives** page attribute (SEO Kit set) adds a robots meta tag
+for `nofollow`, `noarchive`, `nosnippet` and `noimageindex`.
+
+Core already handles two related things, so this package does not:
+
+- `noindex`: tick core's **Exclude From Search Index** attribute. If that and
+  a directive here are both set, the page gets two robots meta tags, which
+  search engines combine.
+- The canonical tag: core outputs it (Dashboard > System & Settings > SEO &
+  Statistics). Page titles and descriptions come from core's `meta_title` and
+  `meta_description`, and sitemap exclusion from `exclude_sitemapxml`.
+
 ### Extending
 
 Listen to `on_seo_kit_jsonld_graph` and change the graph:
