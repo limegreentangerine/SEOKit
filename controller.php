@@ -4,6 +4,7 @@ namespace Concrete\Package\SeoKit;
 
 use Events;
 use SeoKit\Robots\RobotsMeta;
+use SeoKit\Sitemap\SitemapValues;
 use SeoKit\Events\Page as PageEvent;
 use ClassKit\Package\PackageController;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,7 +24,7 @@ class Controller extends PackageController
 
     protected $pkgHandle = 'seo_kit';
 
-    protected $pkgVersion = '0.5.0';
+    protected $pkgVersion = '0.6.0';
 
     protected $appVersionRequired = '9.5.0';
 
@@ -73,27 +74,32 @@ class Controller extends PackageController
         $this->addAttributeType('seo_preview', t('Search & Social Preview'), $pkg);
         $this->addAttribute('seo_preview', t('Search & Social Preview'), 'seo_preview', CollectionKey::class, $seoSet, $pkg);
 
-        $this->setupRobotsAttribute($pkg, $seoSet);
+        $this->setupSelectAttribute($pkg, $seoSet, 'seo_robots', t('Robots Directives'), RobotsMeta::DIRECTIVES, true);
+
+        // core reads these two when it writes sitemap.xml but does not create them, so without them the bulk editor
+        // and the page attributes form have nothing to set
+        $this->addAttribute('sitemap_priority', t('Sitemap Priority'), 'number', CollectionKey::class, $seoSet, $pkg);
+        $this->setupSelectAttribute($pkg, $seoSet, 'sitemap_changefreq', t('Sitemap Change Frequency'), SitemapValues::CHANGE_FREQUENCIES, false);
     }
 
     /**
-     * Multi-select of robots directives. Safe to run repeatedly: it creates what is missing and repairs the rest.
+     * Select attribute with a fixed list of values. Safe to run repeatedly: it creates what is missing and repairs the rest.
      * Built here rather than with class_kit's addSelectAttribute(), which passes plain strings to
      * Select\Controller::setOptions() (it needs option entities) and fails.
      * noindex is left to core's "Exclude From Search Index" attribute.
      */
-    protected function setupRobotsAttribute(PackageEntity $pkg, object $seoSet): void
+    protected function setupSelectAttribute(PackageEntity $pkg, object $seoSet, string $handle, string $name, array $values, bool $multiple): void
     {
         $em = $this->app->make(EntityManagerInterface::class);
 
-        $key = CollectionKey::getByHandle('seo_robots') ?: CollectionKey::add(
+        $key = CollectionKey::getByHandle($handle) ?: CollectionKey::add(
             AttributeType::getByHandle('select'),
-            ['akHandle' => 'seo_robots', 'akName' => t('Robots Directives'), 'akIsSearchable' => true],
+            ['akHandle' => $handle, 'akName' => $name, 'akIsSearchable' => true],
             $pkg,
         );
 
         $settings = $key->getAttributeKeySettings();
-        $settings->setAllowMultipleValues(true);
+        $settings->setAllowMultipleValues($multiple);
         $settings->setAllowOtherValues(false);
 
         $list = $settings->getOptionList();
@@ -102,7 +108,7 @@ class Controller extends PackageController
             $list->getOptions()->toArray(),
         );
 
-        foreach (array_diff(RobotsMeta::DIRECTIVES, $existing) as $value) {
+        foreach (array_diff($values, $existing) as $value) {
             $option = new SelectValueOption();
             $option->setSelectAttributeOptionValue($value);
             $option->setOptionList($list);
@@ -113,7 +119,7 @@ class Controller extends PackageController
 
         $inSet = array_filter(
             $seoSet->getAttributeKeys(),
-            static fn($setKey) => $setKey->getAttributeKeyHandle() === 'seo_robots',
+            static fn($setKey) => $setKey->getAttributeKeyHandle() === $handle,
         );
 
         if ($inSet === []) {
@@ -159,6 +165,7 @@ class Controller extends PackageController
 
         $this->addSinglePage('/dashboard/seo_kit', $pkg, t('SEO Kit'));
         $this->addSinglePage('/dashboard/seo_kit/settings', $pkg, t('Structured Data'), t('Organization details and JSON-LD output.'));
+        $this->addSinglePage('/dashboard/seo_kit/sitemap', $pkg, t('Sitemap'), t('Check sitemap.xml and edit what it lists.'));
         $this->addSinglePage('/dashboard/seo_kit/audit', $pkg, t('Audit'), t('Check pages for SEO problems and track the score over time.'));
 
         $this->setupAttributes($pkg);

@@ -160,6 +160,16 @@ checks. A page scores 100 minus 20 per error, 10 per warning and 3 per notice;
 the site score is the average over every page audited. The latest ten audits are
 kept and shown as a trend, and the latest can be downloaded as a CSV.
 
+## Sitemap
+
+Core's **Generate Sitemap** task writes `sitemap.xml`, so this package does not
+write a second one. Dashboard > SEO Kit > Sitemap shows whether the file exists,
+how many pages it lists and when it was generated, and lets you leave pages out
+(core's `exclude_sitemapxml`) and set `sitemap_priority` (0.0 to 1.0) and
+`sitemap_changefreq`, 50 pages at a time (change it with **Pages per screen**,
+which applies to the whole site). Run the task from Automation afterwards to update the
+file; empty values use the site defaults.
+
 ### Extending
 
 Listen to `on_seo_kit_jsonld_graph` and change the graph:

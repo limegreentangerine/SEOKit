@@ -2,6 +2,19 @@
 
 Notable changes to this project are documented here.
 
+## 0.6.0
+
+### Added
+
+- Dashboard > SEO Kit > Sitemap: whether `sitemap.xml` exists, how many pages it
+  lists, when it was last generated, a warning when the canonical URL is not
+  set, and a table to leave pages out and set their priority and change
+  frequency, with search. It lists 50 pages at a time; a "Pages per screen"
+  setting (10, 25, 50 or 100) changes that for the site. Values are validated, and only
+  changed values for pages you may edit are written.
+- `sitemap_priority` and `sitemap_changefreq` page attributes (SEO Kit set).
+  Core reads them when it writes the sitemap but never creates them.
+
 ## 0.5.0
 
 ### Changed
