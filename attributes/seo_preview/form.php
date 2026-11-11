@@ -97,6 +97,20 @@ $image = 'height:130px;background:#e4e6eb center/cover no-repeat;display:flex;al
             return (input ? input.value : cfg.saved[fieldKey] || '').replace(/\s+/g, ' ').trim();
         }
 
+        // A social title or description follows core's social.opengraph config. When that names a page attribute
+        // that is on this form, use its live value (or the fallback if it is empty); when it names one that is not on
+        // the form, use the saved value; otherwise it is the page name or description, which are live.
+        function socialValue(fieldKey, liveFallback) {
+            var name = cfg.fields[fieldKey];
+            var input = name ? document.querySelector('[name="' + name.replace(/"/g, '\\"') + '"]') : null;
+
+            if (input) {
+                return input.value.replace(/\s+/g, ' ').trim() || liveFallback;
+            }
+
+            return cfg.socialFromAttribute[fieldKey] ? (cfg.saved[fieldKey] || '') : liveFallback;
+        }
+
         function setImage(el, url) {
             el.style.backgroundImage = url ? 'url("' + url.replace(/"/g, '%22') + '")' : '';
             el.textContent = url ? '' : cfg.messages.noImage;
@@ -148,12 +162,16 @@ $image = 'height:130px;background:#e4e6eb center/cover no-repeat;display:flex;al
                 M.description + ': ' + say(M.chars, snippet.length, snippetPx) + ' / ' + L.descriptionMaxPx + ' px.';
 
             part('host').textContent = host();
-            part('ogTitle').textContent = name;
-            part('ogDescription').textContent = fit(description, DESCRIPTION_FONT, 500);
-            part('twTitle').textContent = metaTitle || name;
-            part('twDescription').textContent = fit(snippet, DESCRIPTION_FONT, 500);
-            setImage(part('ogImage'), cfg.images.og);
-            setImage(part('twImage'), cfg.images.twitter);
+            // Open Graph and the X card read the same social.opengraph settings, so they show the same text
+            var socialTitle = socialValue('socialTitle', name);
+            var socialDescription = socialValue('socialDescription', description);
+
+            part('ogTitle').textContent = socialTitle;
+            part('ogDescription').textContent = fit(socialDescription, DESCRIPTION_FONT, 500);
+            part('twTitle').textContent = socialTitle;
+            part('twDescription').textContent = fit(socialDescription, DESCRIPTION_FONT, 500);
+            setImage(part('ogImage'), cfg.images.social);
+            setImage(part('twImage'), cfg.images.social);
 
             var problems = [];
 
@@ -163,9 +181,8 @@ $image = 'height:130px;background:#e4e6eb center/cover no-repeat;display:flex;al
             if (!snippet) { problems.push(M.descriptionMissing); }
             else if (snippet.length < L.descriptionMinChars) { problems.push(say(M.descriptionShort, snippet.length)); }
             else if (snippetPx > L.descriptionMaxPx) { problems.push(say(M.descriptionLong, snippetPx, L.descriptionMaxPx)); }
-            if (metaDescription && description && metaDescription !== description) { problems.push(M.descriptionDiffers); }
-            if (!cfg.images.og) { problems.push(M.ogNoImage); }
-            if (!cfg.images.twitter) { problems.push(M.twitterNoImage); }
+            if (metaDescription && socialDescription !== metaDescription) { problems.push(M.socialDiffers); }
+            if (!cfg.images.social) { problems.push(M.noSharingImage); }
 
             var list = part('checks');
             list.textContent = '';

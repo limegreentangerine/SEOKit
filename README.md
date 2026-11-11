@@ -74,26 +74,59 @@ Core already handles two related things, so this package does not:
 
 ## Titles, descriptions and social sharing
 
-Core already controls these, so this package does not add fields for them:
+Core already controls the search result, so this package adds no fields for it:
 
 - Title: the **Meta Title** attribute, otherwise the page name in the site title
   format (Dashboard > System & Settings > SEO & Statistics).
 - Description: the **Meta Description** attribute, otherwise the page
   description.
-- Open Graph tags (Facebook, LinkedIn): output by core from the page name, page
-  description and the page **Thumbnail**.
 
-SEO Kit adds:
+### Social tags follow core's `social.opengraph` settings
 
-- **Twitter / X Card tags**, using the Meta Title and Meta Description (falling
-  back to the page name and description) and the page Thumbnail, then the site's
-  Default Sharing Image.
-- **Search & Social Preview**: add this attribute (SEO Kit set) to a page's
-  attributes. It shows the Google result and the social cards, with title and
-  description length in characters and pixels and a list of problems, updating
-  as you edit the page name, description, Meta Title and Meta Description in the
-  same form. The preview shows the saved Thumbnail, not one picked but not yet
-  saved. Once saved, it stays on the form for that page.
+Open Graph (Facebook, LinkedIn) and Twitter / X Cards both read the same site
+settings, so they always agree:
+
+| Setting                                 | Default (core)             |
+| --------------------------------------- | -------------------------- |
+| `social.opengraph.enabled`              | on; switches both tag sets |
+| `social.opengraph.field_og_title`       | the page name              |
+| `social.opengraph.field_og_description` | the page description       |
+| `social.opengraph.field_og_thumbnail`   | the page `thumbnail`       |
+| `social.opengraph.field_og_type`        | `website`                  |
+
+Core has no screen for these. To share the Meta Title and Meta Description, set
+them once for the site, for example from a task or `concrete c5:exec`:
+
+```php
+$config = app('site')->getSite()->getConfigRepository();
+$config->save('social.opengraph.field_og_title', ['value_from' => 'page_attribute', 'attribute' => 'meta_title']);
+$config->save('social.opengraph.field_og_description', ['value_from' => 'page_attribute', 'attribute' => 'meta_description']);
+```
+
+SEO Kit improves on core in three ways:
+
+- **Open Graph fallback.** Core prints no title or description tag when the
+  attribute a setting points at is empty. SEO Kit falls back to the page name or
+  description, so every page gets one.
+- **Default sharing image.** A page with no thumbnail of its own uses the
+  site's Default Sharing Image (from `lgt_toolkit`), for Open Graph and Twitter.
+- **Twitter / X Cards**, which core does not output: `twitter:card` (a large
+  image card when there is an image, otherwise a summary), `twitter:title`,
+  `twitter:description`, `twitter:image`, and `twitter:site` from the Twitter or
+  X entry in the site's Social Links.
+
+SEO Kit swaps core's `OpenGraph` class for its own subclass just before a page
+renders, so no `header_required.php` override is needed. A site that overrides
+`header_required.php` to use its own Open Graph class is unaffected.
+
+### Search & Social Preview
+
+Add this attribute (SEO Kit set) to a page's attributes. It shows the Google
+result and the social cards, with title and description length in characters
+and pixels and a list of problems, updating as you edit the page name,
+description, Meta Title and Meta Description in the same form. The social cards
+follow the settings above. The preview shows the saved Thumbnail, not one
+picked but not yet saved. Once saved, it stays on the form for that page.
 
 ## Audit
 

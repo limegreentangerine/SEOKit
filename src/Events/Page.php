@@ -9,7 +9,9 @@ use Concrete\Core\Http\Request;
 use SeoKit\JsonLd\JsonLdService;
 use SeoKit\Social\SocialService;
 use Concrete\Core\Page\Page as ConcretePage;
+use SeoKit\Social\OpenGraph as SeoKitOpenGraph;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use Concrete\Core\Sharing\OpenGraph\OpenGraph as CoreOpenGraph;
 
 /**
  * Handles page-level event hooks for SEO output.
@@ -69,6 +71,24 @@ class Page
 
         if ($tag !== null) {
             $page->getPageController()->addHeaderItem($tag);
+        }
+    }
+
+    /**
+     * Makes core's header_required.php, which asks the container for core's OpenGraph class, get the SEO Kit
+     * subclass instead (see Social\OpenGraph).
+     *
+     * This has to happen late, from on_before_render, not when the package starts: core registers its Sharing
+     * provider after packages start, and that registration would replace a binding made earlier. instance()
+     * wins over any registration. Fails open: on any error core's class stays in place.
+     */
+    public static function useOpenGraph(): void
+    {
+        try {
+            $app = Core::make('app');
+            $app->instance(CoreOpenGraph::class, $app->make(SeoKitOpenGraph::class));
+        } catch (\Throwable) {
+            // core's own Open Graph tags are used
         }
     }
 

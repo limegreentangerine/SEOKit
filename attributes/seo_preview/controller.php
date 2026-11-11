@@ -49,6 +49,12 @@ class Controller extends DefaultController
         $social = $this->app->make(SocialService::class);
         $attr = static fn(string $handle): string => $page ? trim((string) $page->getAttribute($handle)) : '';
 
+        // Social cards follow core's social.opengraph config: the title and description come from the page
+        // attribute it names (when it names one), otherwise from the page name and description.
+        $titleHandle = $site ? $social->titleAttributeHandle($site) : null;
+        $descriptionHandle = $site ? $social->descriptionAttributeHandle($site) : null;
+        $ready = $page && $site;
+
         return [
             'id' => 'seo-preview-' . bin2hex(random_bytes(4)),
             'fields' => [
@@ -56,12 +62,20 @@ class Controller extends DefaultController
                 'description' => 'cDescription',
                 'metaTitle' => $fieldName('meta_title'),
                 'metaDescription' => $fieldName('meta_description'),
+                'socialTitle' => $titleHandle !== null ? $fieldName($titleHandle) : '',
+                'socialDescription' => $descriptionHandle !== null ? $fieldName($descriptionHandle) : '',
+            ],
+            'socialFromAttribute' => [
+                'socialTitle' => $titleHandle !== null,
+                'socialDescription' => $descriptionHandle !== null,
             ],
             'saved' => [
                 'name' => $page ? (string) $page->getCollectionName() : '',
                 'description' => $page ? (string) $page->getCollectionDescription() : '',
                 'metaTitle' => $attr('meta_title'),
                 'metaDescription' => $attr('meta_description'),
+                'socialTitle' => $ready ? $social->title($page, $site) : '',
+                'socialDescription' => $ready ? $social->description($page, $site) : '',
             ],
             'url' => $page ? (string) $page->getCollectionLink() : '',
             'site' => [
@@ -69,8 +83,7 @@ class Controller extends DefaultController
                 'titleFormat' => (string) $this->app->make('config')->get('concrete.seo.title_format', '%1$s :: %2$s'),
             ],
             'images' => [
-                'og' => $page && $site ? $social->pageImageUrl($page, $site) : '',
-                'twitter' => $page && $site ? $social->imageUrl($page, $site) : '',
+                'social' => $ready ? $social->imageUrl($page, $site) : '',
             ],
             'limits' => [
                 'titleMaxPx' => self::TITLE_MAX_PX,
@@ -85,9 +98,8 @@ class Controller extends DefaultController
                 'descriptionMissing' => t('There is no description, so Google will choose text from the page.'),
                 'descriptionShort' => t('The description is short (%s characters).'),
                 'descriptionLong' => t('The description is about %s px wide; Google will probably cut it off (limit around %s px).'),
-                'descriptionDiffers' => t('Open Graph (Facebook, LinkedIn) uses the page description, but X uses the Meta Description.'),
-                'ogNoImage' => t('Open Graph has no image: core uses only the page Thumbnail.'),
-                'twitterNoImage' => t('X has no image: set a Thumbnail on the page or a Default Sharing Image site attribute.'),
+                'socialDiffers' => t('The social cards show a different description from Google, following the social.opengraph site settings (by default the page description).'),
+                'noSharingImage' => t('There is no sharing image: set a Thumbnail on the page or a Default Sharing Image site attribute.'),
                 'allGood' => t('No problems found.'),
                 'chars' => t('%s characters, about %s px'),
                 'title' => t('Title'),

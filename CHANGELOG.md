@@ -2,6 +2,31 @@
 
 Notable changes to this project are documented here.
 
+## 0.5.0
+
+### Changed
+
+- Twitter / X Cards now take their title, description and image from core's
+  `social.opengraph` site settings (`field_og_title`, `field_og_description`,
+  `field_og_thumbnail`), the same ones Open Graph uses, so the two always agree.
+  Before, they read the Meta Title and Meta Description directly. With core's
+  default settings they now use the page name and description. To share the
+  meta fields, point those settings at them (see the README).
+- The Search & Social Preview follows the same settings, and shows one set of
+  social text for the Open Graph and X cards.
+
+### Added
+
+- Open Graph tags are produced by a SEO Kit subclass of core's `OpenGraph`, in
+  place of core's. The tags and their order are core's, with two fixes: an
+  empty source attribute falls back to the page name or description instead of
+  dropping the tag, and a page with no image uses the site's Default Sharing
+  Image. It is swapped in just before a page renders, because core registers its
+  own class after packages start. On any error core's tags are used.
+- `twitter:site`, from the Twitter or X entry in Social Links.
+- Twitter Cards honour `social.opengraph.enabled`, switching off with Open
+  Graph.
+
 ## 0.4.0
 
 ### Added

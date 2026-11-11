@@ -11,6 +11,7 @@ use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Entity\Package as PackageEntity;
 use SeoKit\Providers\JsonLd\JsonLdServiceProvider;
+use SeoKit\Providers\Social\SocialServiceProvider;
 use ClassKit\Package\Traits\{AttributeTrait, PageTrait};
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
@@ -22,7 +23,7 @@ class Controller extends PackageController
 
     protected $pkgHandle = 'seo_kit';
 
-    protected $pkgVersion = '0.4.0';
+    protected $pkgVersion = '0.5.0';
 
     protected $appVersionRequired = '9.5.0';
 
@@ -30,6 +31,7 @@ class Controller extends PackageController
 
     protected $providers = [
         JsonLdServiceProvider::class,
+        SocialServiceProvider::class,
     ];
 
     protected $packageDependencies = [
@@ -137,6 +139,7 @@ class Controller extends PackageController
     public function registerEvents(): void
     {
         Events::addListener('on_before_render', function () {
+            PageEvent::useOpenGraph();
             PageEvent::addJsonLd();
             PageEvent::addRobots();
         });
