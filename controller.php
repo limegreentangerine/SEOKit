@@ -13,6 +13,7 @@ use Concrete\Core\Entity\Package as PackageEntity;
 use SeoKit\Providers\JsonLd\JsonLdServiceProvider;
 use ClassKit\Package\Traits\{AttributeTrait, PageTrait};
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 
 class Controller extends PackageController
 {
@@ -21,7 +22,7 @@ class Controller extends PackageController
 
     protected $pkgHandle = 'seo_kit';
 
-    protected $pkgVersion = '0.3.1';
+    protected $pkgVersion = '0.4.0';
 
     protected $appVersionRequired = '9.5.0';
 
@@ -38,6 +39,25 @@ class Controller extends PackageController
 
     protected $pkgAutoloaderRegistries = [
         'src' => '\SeoKit',
+    ];
+
+    /**
+     * Tables dropped on uninstall when "purge database tables" is ticked, children before parents.
+     *
+     * @var array
+     */
+    protected $databaseTables = [
+        'seoKitAuditFindings',
+        'seoKitAuditRuns',
+    ];
+
+    /**
+     * Package tasks to register (handles must match tasks.xml).
+     *
+     * @var array
+     */
+    protected $tasks = [
+        'seo_kit_audit' => \SeoKit\Command\Task\Controller\AuditController::class,
     ];
 
     protected function setupAttributes(PackageEntity $pkg): void
@@ -132,9 +152,20 @@ class Controller extends PackageController
      */
     public function installOrUpgrade(PackageEntity $pkg): void
     {
+        $this->installContentFile('tasks.xml');
+
         $this->addSinglePage('/dashboard/seo_kit', $pkg, t('SEO Kit'));
         $this->addSinglePage('/dashboard/seo_kit/settings', $pkg, t('Structured Data'), t('Organization details and JSON-LD output.'));
+        $this->addSinglePage('/dashboard/seo_kit/audit', $pkg, t('Audit'), t('Check pages for SEO problems and track the score over time.'));
 
         $this->setupAttributes($pkg);
+
+        // Concrete keeps each user's dashboard menu in their session, so a new page would not show until they next
+        // log in. This clears it for whoever runs the install or update (a no-op from the command line).
+        try {
+            $this->app->make(NavigationCache::class)->clear();
+        } catch (\Throwable) {
+            // the menu is rebuilt at the next login anyway
+        }
     }
 }

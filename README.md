@@ -95,6 +95,38 @@ SEO Kit adds:
   same form. The preview shows the saved Thumbnail, not one picked but not yet
   saved. Once saved, it stays on the form for that page.
 
+## Audit
+
+Run the task **Audit the site for search engines** from Dashboard > System &
+Settings > Automation, on a schedule there, or from the command line:
+
+```bash
+./vendor/bin/concrete task:audit-the-site-for-search-engines
+```
+
+It checks every published page using data Concrete already holds, so it makes
+no web requests and is quick on large sites. Results are under Dashboard > SEO
+Kit > Audit.
+
+| Problem                                                | Severity |
+| ------------------------------------------------------ | -------- |
+| Schema type or custom JSON-LD that would not be output | Error    |
+| Title too long (over 60 characters)                    | Warning  |
+| Title shared with another page                         | Warning  |
+| No description                                         | Warning  |
+| Description over 160 characters                        | Warning  |
+| Description shared with another page                   | Warning  |
+| Noindex page that is listed in the sitemap             | Warning  |
+| Title under 15 characters                              | Notice   |
+| Description under 70 characters                        | Notice   |
+| No sharing image (page Thumbnail or site default)      | Notice   |
+
+The title is the Meta Title, or the page name in the site title format, as core
+uses it. Pages set to noindex are skipped for the title, description and image
+checks. A page scores 100 minus 20 per error, 10 per warning and 3 per notice;
+the site score is the average over every page audited. The latest ten audits are
+kept and shown as a trend, and the latest can be downloaded as a CSV.
+
 ### Extending
 
 Listen to `on_seo_kit_jsonld_graph` and change the graph:

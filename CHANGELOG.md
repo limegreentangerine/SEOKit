@@ -2,6 +2,36 @@
 
 Notable changes to this project are documented here.
 
+## 0.4.0
+
+### Added
+
+- SEO audit. The task "Audit the site for search engines" (Dashboard > System
+  & Settings > Automation, or `task:audit-the-site-for-search-engines` on the
+  command line) checks every published page using data Concrete already holds,
+  with no crawling:
+    - title length, and titles shared by more than one page;
+    - missing, short, long and shared descriptions;
+    - noindex pages that are still in the sitemap;
+    - pages with no sharing image;
+    - Schema types and custom JSON-LD that would not be output.
+      Pages marked noindex are skipped for the title, description and image
+      checks.
+- Dashboard > SEO Kit > Audit: the site score, totals by problem type, the pages
+  to fix first with advice for each problem, the score over the last ten audits,
+  and a CSV download.
+- Each page scores 100 minus 20 per error, 10 per warning and 3 per notice. The
+  site score is the average over every page audited. The latest ten audits are
+  kept.
+- Two tables, `seoKitAuditRuns` and `seoKitAuditFindings`, dropped on uninstall
+  when "purge database tables" is ticked.
+
+### Changed
+
+- Installing or updating clears the current user's dashboard menu cache, which
+  Concrete keeps in the session, so new SEO Kit pages show without logging in
+  again.
+
 ## 0.3.1
 
 ### Added
