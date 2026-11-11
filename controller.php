@@ -8,6 +8,8 @@ use SeoKit\Robots\RobotsMeta;
 use SeoKit\Sitemap\SitemapValues;
 use SeoKit\Events\Page as PageEvent;
 use ClassKit\Package\PackageController;
+use Concrete\Core\Http\ServerInterface;
+use SeoKit\NotFound\NotFoundMiddleware;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Type as AttributeType;
@@ -25,7 +27,7 @@ class Controller extends PackageController
 
     protected $pkgHandle = 'seo_kit';
 
-    protected $pkgVersion = '0.7.0';
+    protected $pkgVersion = '0.8.0';
 
     protected $appVersionRequired = '9.5.0';
 
@@ -53,6 +55,7 @@ class Controller extends PackageController
     protected $databaseTables = [
         'seoKitAuditFindings',
         'seoKitAuditRuns',
+        'seoKitNotFound',
     ];
 
     /**
@@ -143,6 +146,20 @@ class Controller extends PackageController
         return t('Structured data and SEO tools for Concrete CMS');
     }
 
+    public function on_start()
+    {
+        parent::on_start();
+        $this->registerMiddleware();
+    }
+
+    /**
+     * Notes 404s for the monitor. Fails open (see NotFoundMiddleware).
+     */
+    public function registerMiddleware(): void
+    {
+        $this->app->make(ServerInterface::class)->addMiddleware(new NotFoundMiddleware($this->app), 30);
+    }
+
     public function registerRoutes(): void
     {
         Route::register('/llms.txt', '\SeoKit\Robots\LlmsController::serve', 'seo_kit.llms', [], [], '', [], ['GET', 'HEAD']);
@@ -172,6 +189,7 @@ class Controller extends PackageController
         $this->addSinglePage('/dashboard/seo_kit', $pkg, t('SEO Kit'));
         $this->addSinglePage('/dashboard/seo_kit/settings', $pkg, t('Structured Data'), t('Organization details and JSON-LD output.'));
         $this->addSinglePage('/dashboard/seo_kit/sitemap', $pkg, t('Sitemap'), t('Check sitemap.xml and edit what it lists.'));
+        $this->addSinglePage('/dashboard/seo_kit/not_found', $pkg, t('404 Monitor'), t('Missing addresses visitors asked for, with a button to redirect them.'));
         $this->addSinglePage('/dashboard/seo_kit/ai', $pkg, t('AI Crawlers'), t('Control AI bots in robots.txt and publish llms.txt.'));
         $this->addSinglePage('/dashboard/seo_kit/audit', $pkg, t('Audit'), t('Check pages for SEO problems and track the score over time.'));
 

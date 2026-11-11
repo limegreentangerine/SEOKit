@@ -2,6 +2,30 @@
 
 Notable changes to this project are documented here.
 
+## 0.8.0
+
+### Added
+
+- Dashboard > SEO Kit > 404 Monitor. Every GET or HEAD request that ends in a 404 is
+  counted, with the date it was first and last requested and the host name of the
+  site that linked to it. Addresses are lowercased and cleaned, so `/Old-Page/`
+  and `/old-page` count together.
+    - Nothing else is kept: no IP address, user agent, query string or referrer
+      path. Entries are dropped after 90 days without a request, and the list is
+      capped at 5000 addresses, least requested first.
+    - Files (anything ending in a short extension such as `.png`, `.js` or `.php`),
+      system paths and common bot probes are not listed.
+    - It runs after the response is built and fails open: a database problem never
+      changes what the visitor sees.
+- **Redirect** on each row creates the redirect through the redirection tool in
+  LGT Toolkit (the `lgt_redirections` service), as a 301 or 302 to a page you pick,
+  and removes the address from the list. The toolkit's own checks and error
+  messages are shown as they are. **Ignore** removes an address without a redirect.
+- Where LGT Toolkit has no redirection tool, the list still works and the page
+  says redirects are unavailable.
+- One table, `seoKitNotFound`, dropped on uninstall when "purge database tables" is
+  ticked.
+
 ## 0.7.0
 
 ### Added

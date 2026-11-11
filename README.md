@@ -190,6 +190,19 @@ introduction and up to 200 pages (the ones core would put in the sitemap, minus
 noindex pages and pages with **Hide from llms.txt** ticked). A physical `llms.txt` in
 the web root is served instead; the page warns when there is one.
 
+## 404 monitor
+
+Dashboard > SEO Kit > 404 Monitor lists addresses visitors asked for that do not
+exist, most requested first, with when they were last requested and which site
+linked to them. It stores only the cleaned path, a hit count, two dates and the
+referrer's host name. Entries older than 90 days are dropped.
+
+Press **Redirect** on a row, choose the page it should go to and a 301 or 302, and
+the redirect is created through the redirection tool in LGT Toolkit. That tool must
+be present: it is on the toolkit's `feature/redirection-tool` branch and not in a
+release yet. Without it the list works and redirects are switched off. Requests the
+toolkit already redirects never reach the list.
+
 ### Extending
 
 Listen to `on_seo_kit_jsonld_graph` and change the graph:
