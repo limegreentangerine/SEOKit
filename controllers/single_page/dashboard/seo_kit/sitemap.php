@@ -6,6 +6,8 @@ use Permissions;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use SeoKit\Sitemap\SitemapValues;
+use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Sitemap extends DashboardPageController
@@ -97,6 +99,7 @@ class Sitemap extends DashboardPageController
         $changefreq = (array) $post->all('changefreq');
         $changed = 0;
         $skipped = [];
+        $denied = [];
 
         foreach ((array) $post->all('cIDs') as $cID) {
             $page = Page::getByID((int) $cID);
@@ -115,6 +118,11 @@ class Sitemap extends DashboardPageController
 
                 continue;
             }
+
+            // edit_page_properties can be limited to certain attributes, which canEditPageProperties() does not check
+            $permission = PermissionKey::getByHandle('edit_page_properties');
+            $permission->setPermissionObject($page);
+            $assignment = $permission->getMyAssignment();
 
             $now = [
                 'exclude_sitemapxml' => isset($exclude[$cID]),
@@ -137,9 +145,21 @@ class Sitemap extends DashboardPageController
                     continue;
                 }
 
+                $key = CollectionKey::getByHandle($handle);
+
+                if (!$assignment || !$key || !$assignment->canEditAttributeKey($key)) {
+                    $denied[$page->getCollectionName()] = true;
+
+                    continue;
+                }
+
                 $value === '' || $value === false ? $page->clearAttribute($handle) : $page->setAttribute($handle, $value);
                 $changed++;
             }
+        }
+
+        if ($denied !== []) {
+            $this->error->add(t('You may not change these sitemap settings on: %s.', implode(', ', array_keys($denied))));
         }
 
         if ($skipped !== []) {
