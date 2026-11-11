@@ -2,6 +2,7 @@
 
 namespace SeoKit\JsonLd;
 
+use SeoKit\Support\Files;
 use Concrete\Core\File\File;
 use Concrete\Core\Page\Page;
 use Psr\Log\LoggerInterface;
@@ -32,8 +33,8 @@ class JsonLdService
 
         $logoID = (int) $config->get('seo_kit.jsonld.logo_id');
         // Falls back to the toolkit's default sharing image when present.
-        $logo = $this->fileUrl($logoID ? File::getByID($logoID) : null)
-            ?: $this->fileUrl($site->getAttribute('opengraph_default_image'));
+        $logo = Files::url($logoID ? File::getByID($logoID) : null)
+            ?: Files::url($site->getAttribute('opengraph_default_image'));
 
         return [
             'url' => (string) $home->getCollectionLink(),
@@ -120,15 +121,6 @@ class JsonLdService
     protected function language(?Section $section): string
     {
         return $section ? str_replace('_', '-', (string) $section->getLocale()) : '';
-    }
-
-    protected function fileUrl(mixed $file): string
-    {
-        if (is_object($file) && method_exists($file, 'getApprovedVersion')) {
-            $file = $file->getApprovedVersion();
-        }
-
-        return is_object($file) && method_exists($file, 'getURL') ? (string) $file->getURL() : '';
     }
 
     /**

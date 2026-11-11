@@ -7,7 +7,9 @@ use Illuminate\Support\Str;
 use SeoKit\Robots\RobotsMeta;
 use Concrete\Core\Http\Request;
 use SeoKit\JsonLd\JsonLdService;
+use SeoKit\Social\SocialService;
 use Concrete\Core\Page\Page as ConcretePage;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * Handles page-level event hooks for SEO output.
@@ -67,6 +69,30 @@ class Page
 
         if ($tag !== null) {
             $page->getPageController()->addHeaderItem($tag);
+        }
+    }
+
+    /**
+     * Adds Twitter / X Card tags through core's on_header_required_ready event, which hands over the meta tags
+     * before they are printed. Fails open: any error leaves core's tags as they were.
+     */
+    public static function addTwitterCard(GenericEvent $event): void
+    {
+        $page = static::publicPage();
+
+        if ($page === null) {
+            return;
+        }
+
+        try {
+            $tags = Core::make(SocialService::class)->twitterTags($page);
+        } catch (\Throwable) {
+            return;
+        }
+
+        if ($tags !== []) {
+            // keys core already set win, so we never replace a tag another package added
+            $event->setArgument('metaTags', (array) $event->getArgument('metaTags') + $tags);
         }
     }
 }

@@ -21,7 +21,7 @@ class Controller extends PackageController
 
     protected $pkgHandle = 'seo_kit';
 
-    protected $pkgVersion = '0.2.0';
+    protected $pkgVersion = '0.3.0';
 
     protected $appVersionRequired = '9.5.0';
 
@@ -47,6 +47,9 @@ class Controller extends PackageController
         $this->addAttributeType('seo_schema', t('Schema'), $pkg);
         $this->addAttribute('seo_schema', t('Schema'), 'seo_schema', CollectionKey::class, $seoSet, $pkg);
         $this->addAttribute('seo_jsonld_custom', t('Custom JSON-LD'), 'textarea', CollectionKey::class, $seoSet, $pkg);
+
+        $this->addAttributeType('seo_preview', t('Search & Social Preview'), $pkg);
+        $this->addAttribute('seo_preview', t('Search & Social Preview'), 'seo_preview', CollectionKey::class, $seoSet, $pkg);
 
         $this->setupRobotsAttribute($pkg, $seoSet);
     }
@@ -116,6 +119,11 @@ class Controller extends PackageController
         Events::addListener('on_before_render', function () {
             PageEvent::addJsonLd();
             PageEvent::addRobots();
+        });
+
+        // core hands over the meta tags here, before printing them
+        Events::addListener('on_header_required_ready', function ($event) {
+            PageEvent::addTwitterCard($event);
         });
     }
 

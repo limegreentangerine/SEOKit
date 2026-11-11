@@ -72,6 +72,29 @@ Core already handles two related things, so this package does not:
   Statistics). Page titles and descriptions come from core's `meta_title` and
   `meta_description`, and sitemap exclusion from `exclude_sitemapxml`.
 
+## Titles, descriptions and social sharing
+
+Core already controls these, so this package does not add fields for them:
+
+- Title: the **Meta Title** attribute, otherwise the page name in the site title
+  format (Dashboard > System & Settings > SEO & Statistics).
+- Description: the **Meta Description** attribute, otherwise the page
+  description.
+- Open Graph tags (Facebook, LinkedIn): output by core from the page name, page
+  description and the page **Thumbnail**.
+
+SEO Kit adds:
+
+- **Twitter / X Card tags**, using the Meta Title and Meta Description (falling
+  back to the page name and description) and the page Thumbnail, then the site's
+  Default Sharing Image.
+- **Search & Social Preview**: add this attribute (SEO Kit set) to a page's
+  attributes. It shows the Google result and the social cards, with title and
+  description length in characters and pixels and a list of problems, updating
+  as you edit the page name, description, Meta Title and Meta Description in the
+  same form. The preview shows the saved Thumbnail, not one picked but not yet
+  saved. Once saved, it stays on the form for that page.
+
 ### Extending
 
 Listen to `on_seo_kit_jsonld_graph` and change the graph:

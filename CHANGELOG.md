@@ -2,6 +2,27 @@
 
 Notable changes to this project are documented here.
 
+## 0.3.0
+
+### Added
+
+- Twitter / X Card tags (`twitter:card`, `twitter:title`, `twitter:description`,
+  `twitter:image`), added through core's `on_header_required_ready` event. The
+  title and description are the page's Meta Title and Meta Description, falling
+  back to the page name and description. The image is the page Thumbnail (the
+  attribute core's Open Graph uses), falling back to the site's Default Sharing
+  Image from `lgt_toolkit`.
+- `seo_preview` page attribute (SEO Kit set), "Search & Social Preview": shows
+  the Google result and the Open Graph and X cards, with title and description
+  length in characters and pixels and a list of problems. It reads the page
+  name, description, Meta Title and Meta Description live as they are edited,
+  and adds no fields of its own.
+
+### Changed
+
+- Open Graph tags stay with core, which uses the page name and description
+  rather than the Meta Title and Meta Description. The preview shows this.
+
 ## 0.2.0
 
 ### Added
