@@ -5,6 +5,7 @@ namespace SeoKit\JsonLd;
 use Concrete\Core\File\File;
 use Concrete\Core\Page\Page;
 use Psr\Log\LoggerInterface;
+use SeoKit\JsonLd\Types\TypeRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Application\Application;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -19,6 +20,8 @@ class JsonLdService
     public const EVENT_GRAPH = 'on_seo_kit_jsonld_graph';
 
     public const CUSTOM_ATTRIBUTE = 'seo_jsonld_custom';
+
+    public const SCHEMA_ATTRIBUTE = 'seo_schema';
 
     public function __construct(protected Application $app) {}
 
@@ -58,16 +61,33 @@ class JsonLdService
         $url = (string) $page->getCollectionLink();
         $crumbs[] = ['name' => (string) $page->getCollectionName(), 'url' => $url];
 
-        $modified = (string) $page->getCollectionDateLastModified();
+        $iso = static fn(string $date): string => $date === '' ? '' : (new \DateTimeImmutable($date))->format(DATE_ATOM);
 
         return [
             'url' => $url,
             'name' => (string) $page->getCollectionName(),
             'description' => (string) $page->getCollectionDescription(),
             'inLanguage' => $this->language($section),
-            'dateModified' => $modified === '' ? '' : (new \DateTimeImmutable($modified))->format(DATE_ATOM),
+            'datePublished' => $iso((string) $page->getCollectionDatePublic()),
+            'dateModified' => $iso((string) $page->getCollectionDateLastModified()),
             'breadcrumbs' => $crumbs,
         ];
+    }
+
+    /**
+     * The node for the page's chosen schema type (Article, FAQ, ...), if any.
+     *
+     * @return array<int, array>
+     */
+    protected function schemaNodes(Page $page, array $pageData, array $siteData): array
+    {
+        $result = TypeRegistry::nodes((string) $page->getAttribute(self::SCHEMA_ATTRIBUTE), $pageData, $siteData);
+
+        foreach ($result['errors'] as $error) {
+            $this->log(sprintf('Schema type on page %d skipped: %s', $page->getCollectionID(), $error));
+        }
+
+        return $result['nodes'];
     }
 
     /**
@@ -150,10 +170,14 @@ class JsonLdService
             // getBySectionOfSite() returns a falsy value on non-multilingual sites
             $section = Section::getBySectionOfSite($page) ?: null; // @phpstan-ignore ternary.alwaysTrue
 
+            $siteData = $this->siteData($site, $section);
+            $pageData = $this->pageData($page, $section);
+
+            // Schema type nodes come before custom JSON-LD, so custom nodes can still override them by @id.
             $graph = SchemaBuilder::graph(
-                $this->siteData($site, $section),
-                $this->pageData($page, $section),
-                $this->customNodes($page),
+                $siteData,
+                $pageData,
+                array_merge($this->schemaNodes($page, $pageData, $siteData), $this->customNodes($page)),
             );
 
             // Lets other code add, remove or change nodes: $event->setArgument('graph', ...).

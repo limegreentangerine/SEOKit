@@ -32,6 +32,25 @@ opening hours and a list of nodes to switch off if your theme already outputs
 them. `sameAs` is built from the site's Social Links (Dashboard > System &
 Settings > Social Links).
 
+### Schema types per page
+
+Set the **Schema** page attribute (SEO Kit set) to add a node for what the page
+is about. Pick a type, then fill in its fields:
+
+- Article / Blog post / News article
+- FAQ
+- Product
+- Event
+- Person
+- Local business (a branch or location page, linked to the site's organization)
+- How-to
+
+Name, description and dates default from the page, so most fields are optional.
+Fields marked with a red asterisk are required: the form warns while one is
+empty, but Concrete lets the page be saved anyway. A type with a required field
+missing is not output, and the reason is written to the Concrete log. The node
+is linked to the page's WebPage and the site's Organization.
+
 ### Custom JSON-LD per page
 
 Set the **Custom JSON-LD** page attribute (SEO Kit set) to a JSON object, a

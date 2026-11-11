@@ -21,7 +21,7 @@ class Controller extends PackageController
 
     protected $pkgHandle = 'seo_kit';
 
-    protected $pkgVersion = '0.1.4';
+    protected $pkgVersion = '0.2.0';
 
     protected $appVersionRequired = '9.5.0';
 
@@ -33,7 +33,6 @@ class Controller extends PackageController
 
     protected $packageDependencies = [
         'class_kit' => true,
-        // Organization details come from the toolkit's site attributes.
         'lgt_toolkit' => true,
     ];
 
@@ -45,6 +44,8 @@ class Controller extends PackageController
     {
         $seoSet = $this->addAttributeSet('collection', 'seo_kit', t('SEO Kit'), $pkg);
 
+        $this->addAttributeType('seo_schema', t('Schema'), $pkg);
+        $this->addAttribute('seo_schema', t('Schema'), 'seo_schema', CollectionKey::class, $seoSet, $pkg);
         $this->addAttribute('seo_jsonld_custom', t('Custom JSON-LD'), 'textarea', CollectionKey::class, $seoSet, $pkg);
 
         $this->setupRobotsAttribute($pkg, $seoSet);

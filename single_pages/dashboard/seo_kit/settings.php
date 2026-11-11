@@ -18,7 +18,7 @@ $logo = $logoID ? \Concrete\Core\File\File::getByID($logoID) : null;
         <div class="mb-3">
             <?php echo $form->label('logo_id', t('Logo')); ?>
             <?php echo $fileManager->image('seo-kit-logo', 'logo_id', t('Choose logo'), $logo ?: null); ?>
-            <div class="form-text"><?php echo t('Falls back to the Default Sharing Image site attribute when LGT Toolkit is installed.'); ?></div>
+            <div class="form-text"><?php echo t('Falls back to the Default Sharing Image site attribute from LGT Toolkit.'); ?></div>
         </div>
 
         <div class="mb-3">

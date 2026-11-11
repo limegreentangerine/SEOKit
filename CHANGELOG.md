@@ -2,6 +2,27 @@
 
 Notable changes to this project are documented here.
 
+## 0.2.0
+
+### Added
+
+- `seo_schema` page attribute type (SEO Kit set): choose a schema type and fill
+  in its fields in the page attributes form instead of writing JSON. Seven
+  types: Article / Blog post, FAQ, Product, Event, Person, Local business
+  (branch or location page) and How-to.
+- Fields that Concrete already knows (name, description, dates) fill in from the
+  page and can be overridden.
+- The form warns, as you type, which required fields are still empty. Concrete's
+  page attributes panel does not validate attributes, so the warning does not
+  block saving: a type with a required field missing is not output, and the
+  reason is logged.
+- The chosen type's node is added to the page's `@graph`, linked to the WebPage
+  and Organization nodes. Custom JSON-LD can still replace it by `@id`.
+
+### Changed
+
+- PHPUnit now uses `tests/bootstrap.php`, which stubs Concrete's `t()` and `h()`.
+
 ## 0.1.4
 
 ### Added

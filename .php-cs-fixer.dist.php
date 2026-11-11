@@ -2,6 +2,7 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in([
+        __DIR__ . '/attributes',
         __DIR__ . '/controllers',
         __DIR__ . '/single_pages',
         __DIR__ . '/src',
