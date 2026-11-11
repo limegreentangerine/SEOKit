@@ -195,6 +195,23 @@ final class SchemaTypesBehaviorTest extends TestCase
         $this->assertSame(['Starts is required.'], TypeRegistry::fromPost(['type' => 'Event', 'data' => ['Event' => []]])['errors']);
     }
 
+    public function testEventTimesGetTheSiteTimezoneOffsetForThatDate(): void
+    {
+        $data = ['startDate' => '2027-07-01T19:00', 'endDate' => '2027-01-15T22:30'];
+
+        // British Summer Time in July, GMT in January
+        $london = $this->nodesFor('Event', $data, ['timezone' => 'Europe/London'])['nodes'][0];
+        $this->assertSame('2027-07-01T19:00:00+01:00', $london['startDate']);
+        $this->assertSame('2027-01-15T22:30:00+00:00', $london['endDate']);
+
+        $newYork = $this->nodesFor('Event', $data, ['timezone' => 'America/New_York'])['nodes'][0];
+        $this->assertSame('2027-07-01T19:00:00-04:00', $newYork['startDate']);
+
+        // no timezone, or one PHP does not know: left as typed
+        $this->assertSame('2027-07-01T19:00', $this->nodesFor('Event', $data)['nodes'][0]['startDate']);
+        $this->assertSame('2027-07-01T19:00', $this->nodesFor('Event', $data, ['timezone' => 'Not/AZone'])['nodes'][0]['startDate']);
+    }
+
     public function testPersonLinksToTheOrganizationOnlyWhenAsked(): void
     {
         $with = $this->nodesFor('Person', ['jobTitle' => 'Editor', 'sameAs' => "https://twitter.com/x\nbad", 'worksForSite' => '1'])['nodes'][0];

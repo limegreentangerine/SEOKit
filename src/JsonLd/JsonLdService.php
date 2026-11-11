@@ -47,6 +47,8 @@ class JsonLdService
             'address' => $this->address($site->getAttribute('site_company_address')),
             'openingHours' => $this->lines((string) $config->get('seo_kit.jsonld.opening_hours')),
             'inLanguage' => $this->language($section),
+            // the site's timezone (Dashboard > System & Settings > Date & Time), for times editors enter
+            'timezone' => (string) $site->getTimezone(),
             'disabled' => (array) $config->get('seo_kit.jsonld.disabled', []),
         ];
     }

@@ -2,6 +2,19 @@
 
 Notable changes to this project are documented here.
 
+## 0.3.1
+
+### Added
+
+- Package `icon.png`.
+
+### Fixed
+
+- Event start and end times now carry the site timezone's offset for that date
+  (for example `2027-07-01T19:00:00+01:00` in summer, `+00:00` in winter), as
+  Google asks for. Before, they were output without a timezone. A site with no
+  usable timezone keeps the time as typed.
+
 ## 0.3.0
 
 ### Added

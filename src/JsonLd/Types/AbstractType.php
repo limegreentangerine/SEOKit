@@ -59,6 +59,26 @@ abstract class AbstractType implements SchemaType
     }
 
     /**
+     * A local date and time as an editor typed it ("2027-05-01T19:00") with the offset that applies on that date
+     * in the site's timezone ("2027-05-01T19:00:00+01:00"), which is what Google asks for. Left as typed when the
+     * site has no usable timezone.
+     */
+    protected static function withOffset(string $local, array $site): string
+    {
+        $timezone = (string) ($site['timezone'] ?? '');
+
+        if ($local === '' || $timezone === '') {
+            return $local;
+        }
+
+        try {
+            return (new \DateTimeImmutable($local, new \DateTimeZone($timezone)))->format(DATE_ATOM);
+        } catch (\Throwable) {
+            return $local;
+        }
+    }
+
+    /**
      * @return array<string, string>
      */
     protected static function currencies(): array
