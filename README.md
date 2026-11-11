@@ -11,7 +11,34 @@ independently of `lgt_toolkit`.
   `site_company_address`, `opengraph_default_image`). Fill them in under
   Dashboard > System & Settings > Site Attributes.
 
-## Phase 1: JSON-LD
+## What is in the package
+
+Dashboard pages (Dashboard > SEO Kit):
+
+| Page            | What it does                                           |
+| --------------- | ------------------------------------------------------ |
+| Structured Data | Organization details for the JSON-LD graph             |
+| Audit           | Site SEO score, problems by page, trend, CSV           |
+| Sitemap         | sitemap.xml status and a bulk editor for what it lists |
+| AI Crawlers     | Block AI bots in robots.txt, publish llms.txt          |
+| 404 Monitor     | Missing addresses, with a button to redirect them      |
+
+Page attributes (the **SEO Kit** attribute set):
+
+| Attribute                | Handle               | Purpose                                       |
+| ------------------------ | -------------------- | --------------------------------------------- |
+| Schema                   | `seo_schema`         | A schema type for the page, with its fields   |
+| Custom JSON-LD           | `seo_jsonld_custom`  | Your own JSON-LD for the page                 |
+| Robots Directives        | `seo_robots`         | nofollow, noarchive, nosnippet, noimageindex  |
+| Search & Social Preview  | `seo_preview`        | Preview of the search result and social cards |
+| Hide from llms.txt       | `seo_llms_exclude`   | Keeps the page out of llms.txt                |
+| Sitemap Priority         | `sitemap_priority`   | Read by core when it writes sitemap.xml       |
+| Sitemap Change Frequency | `sitemap_changefreq` | Read by core when it writes sitemap.xml       |
+
+Tasks (Dashboard > System & Settings > Automation): **Audit the site for search
+engines**.
+
+## JSON-LD
 
 On public front-end pages the package adds one
 `<script type="application/ld+json">` block to the page head containing a
