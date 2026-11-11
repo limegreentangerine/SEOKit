@@ -1,22 +1,28 @@
 {
-	"name": "limegreentangerine/composer_package",
-	"description": "composer_description",
+	"name": "limegreentangerine/seo_kit",
+	"description": "SEO kit for Concrete5",
 	"type": "concrete5-package",
 	"license": "proprietary",
 	"minimum-stability": "stable",
 	"autoload": {
 		"psr-4": {
-			"ComposerPackage\\": "src/"
+			"SeoKit\\": "src/"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"ComposerPackage\\Tests\\": "tests/"
+			"SeoKit\\Tests\\": "tests/"
 		}
 	},
-	"authors": [],
+	"authors": [
+		{
+			"name": "Dave Hendy",
+			"email": "david@limegreentangerine.co.uk"
+		}
+	],
 	"require": {
-		"limegreentangerine/class_kit": "^1.0"
+		"limegreentangerine/class_kit": "^2.0",
+		"limegreentangerine/lgt_toolkit": "^1.0"
 	},
 	"require-dev": {
 		"php": "^8.4",

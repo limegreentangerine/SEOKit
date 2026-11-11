@@ -1,107 +1,76 @@
 <?php
 
-namespace Concrete\Package\ComposerPackage;
+namespace Concrete\Package\SeoKit;
 
-use Concrete\Core\Package\Package;
+use Events;
+use SeoKit\Events\Page as PageEvent;
+use ClassKit\Package\PackageController;
+use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Entity\Package as PackageEntity;
+use SeoKit\Providers\JsonLd\JsonLdServiceProvider;
+use ClassKit\Package\Traits\{AttributeTrait, PageTrait};
 
-class Controller extends Package
+class Controller extends PackageController
 {
-    /**
-     * The packages handle.
-     * Note that this must be unique in the
-     * entire concrete5 package ecosystem.
-     *
-     * @var string
-     */
-    protected $pkgHandle = 'composer_package';
+    use AttributeTrait;
+    use PageTrait;
 
-    /**
-     * The packages version.
-     *
-     * @var string
-     */
-    protected $pkgVersion = '0.0.0';
+    protected $pkgHandle = 'seo_kit';
 
-    /**
-     * The minimum Concrete version compatible with the package.
-     * Override this value according to the minimum required version for your package.
-     *
-     * @var string
-     */
+    protected $pkgVersion = '0.1.2';
+
     protected $appVersionRequired = '9.5.0';
 
-    /**
-     * The minimum PHP version compatible with the package.
-     * Override this value according to the minimum required version for your package.
-     *
-     * @var string
-     * @var string
-     */
     protected $phpVersionRequired = '8.4';
 
-    /**
-     * Package service providers to register.
-     *
-     * eg. 'Concrete\Package\PackageHandle\Src\Providers\PackageServiceProvider'
-     *
-     * @var array
-     */
-    protected $providers = [];
+    protected $providers = [
+        JsonLdServiceProvider::class,
+    ];
 
-    /**
-     * An array describing the package dependencies.
-     * Keys are package handles.
-     * Values may be:
-     * - false: this package can't be installed if the other package is already installed.
-     * - true: this package can't be installed of the other package is not installed
-     * - a string: this package can't be installed of the other package is not installed or it's installed with an older version
-     * - an array with two strings, representing the minimum and the maximum version of the other package to be installed.
-     *
-     * @var array
-     *
-     * @example [
-     *     // This package can't be installed if a package with handle other_package_1 is already installed.
-     *     'other_package_1' => false,
-     *     // This package can't be installed if a package with handle other_package_2 is not installed.
-     *     'other_package_2' => true,
-     *     // This package can't be installed if a package with handle other_package_3 is not installed, or it has a version prior to 1.0
-     *     'other_package_3' => '1.0',
-     *     // This package can't be installed if a package with handle other_package_4 is not installed, or it has a version prior to 2.0, or it has a version after 2.9
-     *     'other_package_4' => ['2.0', '2.9'],
-     * ]
-     */
     protected $packageDependencies = [
         'class_kit' => true,
+        // Organization details come from the toolkit's site attributes.
+        'lgt_toolkit' => true,
     ];
 
-    /**
-     * Package class autoloader registrations
-     * The package install helper class, included with this boilerplate,
-     * is activated by default.
-     *
-     * @see https://goo.gl/4wyRtH
-     * @var array
-     */
     protected $pkgAutoloaderRegistries = [
-        'src' => '\ComposerPackage',
+        'src' => '\SeoKit',
     ];
 
-    /**
-     * Package tasks to register.
-     *
-     * eg. 'task_handle' => \PackageHandle\Command\Task\Controller\TaskHandleController::class,
-     *
-     * @var array
-     */
-    protected $tasks = [];
+    protected function setupAttributes(PackageEntity $pkg): void
+    {
+        $seoSet = $this->addAttributeSet('collection', 'seo_kit', t('SEO Kit'), $pkg);
+
+        $this->addAttribute('seo_jsonld_custom', t('Custom JSON-LD'), 'textarea', CollectionKey::class, $seoSet, $pkg);
+    }
 
     public function getPackageName()
     {
-        return t('composer_name');
+        return t('SEO Kit');
     }
 
     public function getPackageDescription()
     {
-        return t('composer_description');
+        return t('Structured data and SEO tools for Concrete CMS');
+    }
+
+    public function registerRoutes(): void {}
+
+    public function registerEvents(): void
+    {
+        Events::addListener('on_before_render', function () {
+            PageEvent::addJsonLd();
+        });
+    }
+
+    /**
+     * Idempotent: runs on both install and upgrade.
+     */
+    public function installOrUpgrade(PackageEntity $pkg): void
+    {
+        $this->addSinglePage('/dashboard/seo_kit', $pkg, t('SEO Kit'));
+        $this->addSinglePage('/dashboard/seo_kit/settings', $pkg, t('Structured Data'), t('Organization details and JSON-LD output.'));
+
+        $this->setupAttributes($pkg);
     }
 }

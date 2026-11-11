@@ -2,36 +2,31 @@
 
 Notable changes to this project are documented here.
 
-## 0.0.0
-
-### Added
-
-- Separate GitHub Actions workflows for code standards and system tests.
+## 0.1.2
 
 ### Changed
 
-- Code standards checks run on pushes and pull requests; system tests run on
-  pull requests.
-- Updated Composer dependencies and development tooling for the package
-  template.
+- `lgt_toolkit` is now a required package. Organization name, phone, email,
+  address and the default sharing image come from its site attributes.
+- Empty custom JSON-LD (`{}`, `[]`, an empty graph) is now logged as invalid
+  instead of being silently ignored.
 
-## 2026-09-25
+## 0.1.1
 
-### Added
+### Fixed
 
-- PHPStan static analysis configuration and a Composer command for type checks.
-- Cloudflare Access authentication for installing dependencies from the private
-  Composer registry.
+- `/dashboard/seo_kit` now redirects to the Structured Data page.
 
-### Changed
-
-- Updated the template to use the published `limegreentangerine/class_kit`
-  Composer package.
-- Refined the GitHub Actions workflows and development dependencies.
-
-## 2026-09-15
+## 0.1.0
 
 ### Added
 
-- Initial Concrete CMS Composer package template, including Composer
-  autoloading, PHPUnit test setup, and a GitHub Actions test workflow.
+- JSON-LD output: a single `@graph` with Organization/LocalBusiness, WebSite,
+  WebPage and BreadcrumbList on public front-end pages.
+- Use of `lgt_toolkit` site attributes for organization details.
+- `sameAs` taken from the site's Social Links.
+- Dashboard settings page for organization type, logo,
+  opening hours and per-node opt-out.
+- `seo_jsonld_custom` page attribute for custom JSON-LD, validated before
+  output.
+- `on_seo_kit_jsonld_graph` event for changing the graph.

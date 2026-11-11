@@ -1,74 +1,62 @@
-# Composer Package Template
+# SEO Kit
 
-[![Code Standards](https://github.com/limegreentangerine/composer_package/actions/workflows/CodeStandards.yml/badge.svg)](https://github.com/limegreentangerine/composer_package/actions/workflows/CodeStandards.yml)
-[![System Tests](https://github.com/limegreentangerine/composer_package/actions/workflows/SystemTests.yml/badge.svg)](https://github.com/limegreentangerine/composer_package/actions/workflows/SystemTests.yml)
+Structured data and SEO tools for Concrete CMS. Installed per site, released
+independently of `lgt_toolkit`.
 
-Use this repository as a starting point for a Concrete CMS package. Before using
-the template, update the package metadata and replace these identifiers
-throughout the project (use case-sensitive search):
+- Handle: `seo_kit`
+- Requires PHP 8.4, Concrete CMS 9.5 and the `class_kit` and `lgt_toolkit`
+  packages.
+- The Organization node reads the toolkit's site attributes
+  (`site_company_name`, `site_company_phone`, `site_company_email`,
+  `site_company_address`, `opengraph_default_image`). Fill them in under
+  Dashboard > System & Settings > Site Attributes.
 
-- `composer_package` -> package handle and PHP namespace prefix.
-- `composer_description` -> package description in `composer.json`.
-- `ComposerPackage` -> PHP namespace in the Composer autoload configuration.
-- `composer_name` -> package display name, where used.
+## Phase 1: JSON-LD
 
-Add contributor details to the `authors` section of `composer.json`.
+On public front-end pages the package adds one
+`<script type="application/ld+json">` block to the page head containing a
+single `@graph`:
 
-## Requirements
+- `Organization` or `LocalBusiness`
+- `WebSite`
+- `WebPage`
+- `BreadcrumbList` (omitted on the home page)
 
-- PHP 8.4 or later.
-- Composer.
-- Node.js and npm, used by the Composer post-install script and JavaScript
-  formatting commands.
-- Access to the private Composer registry at
-  `https://packages.limegreentangerine.net` to install private dependencies.
+It is not output in the dashboard, edit mode, system pages, error pages or
+XHR/JSON requests.
 
-The template currently requires `limegreentangerine/class_kit` and uses
-Concrete CMS 9.2 and PHPUnit 11 for development.
+### Settings
 
-## Install
+Dashboard > SEO Kit > Structured Data (per site): organization type, logo,
+opening hours and a list of nodes to switch off if your theme already outputs
+them. `sameAs` is built from the site's Social Links (Dashboard > System &
+Settings > Social Links).
+
+### Custom JSON-LD per page
+
+Set the **Custom JSON-LD** page attribute (SEO Kit set) to a JSON object, a
+list of objects, or an object with an `@graph` list. Any nested `@context` is
+dropped. A custom node with the same `@id` as a generated node replaces it;
+other nodes are appended. Invalid JSON is logged and skipped, never output.
+
+### Extending
+
+Listen to `on_seo_kit_jsonld_graph` and change the graph:
+
+```php
+Events::addListener('on_seo_kit_jsonld_graph', function ($event) {
+    $graph = $event->getArgument('graph');
+    // ...modify $graph...
+    $event->setArgument('graph', $graph);
+});
+```
+
+## Development
 
 ```bash
 composer install
+composer test
+composer format:check
 ```
 
-Composer runs `npm install` after installation. If you need to authenticate to
-the private registry, configure Composer to send the Cloudflare Access service
-token headers for `packages.limegreentangerine.net`:
-
-- `CF-ACCESS-CLIENT-ID` -> Cloudflare Access service-token client ID.
-- `CF-ACCESS-CLIENT-SECRET` -> matching client secret.
-
-Keep these credentials private; do not commit them to the repository.
-
-## Development commands
-
-Run these commands from the repository root:
-
-| Command | Purpose |
-| --- | --- |
-| `composer test` | Run PHPUnit tests. |
-| `composer test-coverage` | Run PHPUnit and print a coverage report. |
-| `composer typecheck` | Run PHPStan using `phpstan.neon`. Findings are displayed, but the command exits successfully even when PHPStan reports errors. |
-| `composer format:check` | Check PHP and JavaScript formatting. |
-| `composer format` | Format PHP and JavaScript files. |
-| `composer format:php:check` / `composer format:php` | Check or format PHP files with PHP-CS-Fixer. |
-| `composer format:js:check` / `composer format:js` | Check or format files with Prettier. |
-
-PHPStan analyzes `src` and `tests` at level 4, with bootstrap configuration
-from `phpstan-bootstrap.php`. If you add package directories, update the
-`paths` in `phpstan.neon` and the directories in `.php-cs-fixer.dist.php` so
-they are included in analysis and formatting.
-
-## GitHub Actions
-
-- **CodeStandards** runs formatting checks and PHPStan on pushes and pull
-  requests.
-- **SystemTests** runs PHPUnit on pull requests.
-
-Both workflows install dependencies from the private Composer registry. Add
-these **repository secrets** under **Settings > Secrets and variables >
-Actions** so the workflows can authenticate:
-
-- `CF_ACCESS_CLIENT_ID` -> Cloudflare Access service-token client ID.
-- `CF_ACCESS_CLIENT_SECRET` -> matching client secret.
+The version is kept in `controller.php`, `package.json` and `CHANGELOG.md`.

@@ -1,26 +1,22 @@
 {
-	"name": "composer_package",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"directories": {
-		"test": "tests"
-	},
+	"name": "seo_kit",
+	"version": "0.1.2",
+	"description": "Structured data and SEO tools for Concrete CMS",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/limegreentangerine/composer_package.git"
+		"url": "git+https://github.com/limegreentangerine/seo_kit.git"
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC",
+	"license": "UNLICENSED",
 	"type": "commonjs",
 	"bugs": {
-		"url": "https://github.com/limegreentangerine/composer_package/issues"
+		"url": "https://github.com/limegreentangerine/seo_kit/issues"
 	},
-	"homepage": "https://github.com/limegreentangerine/composer_package#readme",
+	"homepage": "https://github.com/limegreentangerine/seo_kit#readme",
 	"devDependencies": {
 		"prettier": "^3.9.6"
 	}
