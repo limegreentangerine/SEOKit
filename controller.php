@@ -2,6 +2,7 @@
 
 namespace Concrete\Package\SeoKit;
 
+use Route;
 use Events;
 use SeoKit\Robots\RobotsMeta;
 use SeoKit\Sitemap\SitemapValues;
@@ -24,7 +25,7 @@ class Controller extends PackageController
 
     protected $pkgHandle = 'seo_kit';
 
-    protected $pkgVersion = '0.6.0';
+    protected $pkgVersion = '0.7.0';
 
     protected $appVersionRequired = '9.5.0';
 
@@ -75,6 +76,8 @@ class Controller extends PackageController
         $this->addAttribute('seo_preview', t('Search & Social Preview'), 'seo_preview', CollectionKey::class, $seoSet, $pkg);
 
         $this->setupSelectAttribute($pkg, $seoSet, 'seo_robots', t('Robots Directives'), RobotsMeta::DIRECTIVES, true);
+
+        $this->addAttribute('seo_llms_exclude', t('Hide from llms.txt'), 'boolean', CollectionKey::class, $seoSet, $pkg);
 
         // core reads these two when it writes sitemap.xml but does not create them, so without them the bulk editor
         // and the page attributes form have nothing to set
@@ -140,7 +143,10 @@ class Controller extends PackageController
         return t('Structured data and SEO tools for Concrete CMS');
     }
 
-    public function registerRoutes(): void {}
+    public function registerRoutes(): void
+    {
+        Route::register('/llms.txt', '\SeoKit\Robots\LlmsController::serve', 'seo_kit.llms', [], [], '', [], ['GET', 'HEAD']);
+    }
 
     public function registerEvents(): void
     {
@@ -166,6 +172,7 @@ class Controller extends PackageController
         $this->addSinglePage('/dashboard/seo_kit', $pkg, t('SEO Kit'));
         $this->addSinglePage('/dashboard/seo_kit/settings', $pkg, t('Structured Data'), t('Organization details and JSON-LD output.'));
         $this->addSinglePage('/dashboard/seo_kit/sitemap', $pkg, t('Sitemap'), t('Check sitemap.xml and edit what it lists.'));
+        $this->addSinglePage('/dashboard/seo_kit/ai', $pkg, t('AI Crawlers'), t('Control AI bots in robots.txt and publish llms.txt.'));
         $this->addSinglePage('/dashboard/seo_kit/audit', $pkg, t('Audit'), t('Check pages for SEO problems and track the score over time.'));
 
         $this->setupAttributes($pkg);

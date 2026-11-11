@@ -170,6 +170,26 @@ how many pages it lists and when it was generated, and lets you leave pages out
 which applies to the whole site). Run the task from Automation afterwards to update the
 file; empty values use the site defaults.
 
+## AI crawlers
+
+Dashboard > SEO Kit > AI Crawlers.
+
+**robots.txt.** Tick the bots to block. Saving writes one block between
+`# BEGIN SEO Kit` and `# END SEO Kit` in the web root's `robots.txt`, creating the
+file if there is none, and never changes anything outside the block. If the file
+is not writable or the markers are damaged, nothing is written and the page shows
+the text to paste. Rules typed under **Other rules** that have no `User-agent` line
+are given `User-agent: *`, so they cannot attach to a bot above them.
+
+robots.txt is a request, not enforcement. A CDN such as Cloudflare has its own bot
+settings that can block a bot this page allows, and a managed robots.txt there may
+add rules of its own. SEO Kit cannot see those settings.
+
+**llms.txt.** Tick **Publish llms.txt** to serve `/llms.txt`: the site name, your
+introduction and up to 200 pages (the ones core would put in the sitemap, minus
+noindex pages and pages with **Hide from llms.txt** ticked). A physical `llms.txt` in
+the web root is served instead; the page warns when there is one.
+
 ### Extending
 
 Listen to `on_seo_kit_jsonld_graph` and change the graph:

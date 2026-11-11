@@ -2,6 +2,29 @@
 
 Notable changes to this project are documented here.
 
+## 0.7.0
+
+### Added
+
+- Dashboard > SEO Kit > AI Crawlers:
+    - Tick the AI bots to block from the whole site, grouped by what they do:
+      training, AI search, and fetching a page for a person. Fourteen bots,
+      including GPTBot, ClaudeBot, Google-Extended, PerplexityBot and CCBot.
+    - Extra robots.txt rules, and a Sitemap line when `sitemap.xml` exists.
+    - A preview of the resulting robots.txt and of llms.txt.
+    - Notices that robots.txt only asks crawlers to behave, and that a CDN such
+      as Cloudflare has bot settings of its own.
+- robots.txt is edited in place, not served by the package, because sites ship
+  with a physical file that the web server serves before Concrete runs. Saving
+  writes one block between `# BEGIN SEO Kit` and `# END SEO Kit` and keeps every
+  other byte of the file. A missing file is created with a rule that keeps
+  crawlers out of the dashboard. A file that cannot be written, or whose markers
+  are damaged, is left alone and the dashboard shows what to paste.
+- `/llms.txt` (off until ticked): the site name, an introduction you write, and
+  the pages core would put in the sitemap, up to 200, with their descriptions.
+  Noindex pages and pages with the new **Hide from llms.txt** attribute
+  (`seo_llms_exclude`, SEO Kit set) are left out.
+
 ## 0.6.0
 
 ### Added
