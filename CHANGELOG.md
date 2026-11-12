@@ -2,6 +2,21 @@
 
 Notable changes to this project are documented here.
 
+## Unreleased
+
+### Added
+
+- **Run audit** button on Dashboard > SEO Kit > Audit, running the same audit as the
+  automation task in the request.
+- The AI Crawlers page starts with defaults: eight training and bulk-collection bots
+  blocked, and rules keeping crawlers out of Concrete's system folders.
+
+### Changed
+
+- The audit CSV filename includes the site's host (or site name).
+- A new robots.txt contains only the SEO Kit block; the system-folder rules are now
+  part of the default **Other rules**.
+
 ## 0.8.0
 
 ### Added

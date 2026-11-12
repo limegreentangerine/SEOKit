@@ -157,8 +157,10 @@ picked but not yet saved. Once saved, it stays on the form for that page.
 
 ## Audit
 
-Run the task **Audit the site for search engines** from Dashboard > System &
-Settings > Automation, on a schedule there, or from the command line:
+Press **Run audit** on Dashboard > SEO Kit > Audit (it runs in the request, so on a
+very large site use the task instead), or run the task **Audit the site for search
+engines** from Dashboard > System & Settings > Automation, on a schedule there, or
+from the command line:
 
 ```bash
 ./vendor/bin/concrete task:audit-the-site-for-search-engines
@@ -166,7 +168,8 @@ Settings > Automation, on a schedule there, or from the command line:
 
 It checks every published page using data Concrete already holds, so it makes
 no web requests and is quick on large sites. Results are under Dashboard > SEO
-Kit > Audit.
+Kit > Audit. **Download CSV** names the file after the site's host, for example
+`seo-audit-example.com-2026-11-12.csv`.
 
 | Problem                                                | Severity |
 | ------------------------------------------------------ | -------- |
@@ -201,9 +204,13 @@ file; empty values use the site defaults.
 
 Dashboard > SEO Kit > AI Crawlers.
 
-**robots.txt.** Tick the bots to block. Saving writes one block between
+**robots.txt.** Until you save, the page shows defaults: the eight training and
+bulk-collection bots blocked (OpenAI and Anthropic training, Google-Extended,
+Apple, Common Crawl, Meta, ByteDance, Amazon) and rules keeping crawlers out of
+Concrete's system folders. Tick the bots to block. Saving writes one block between
 `# BEGIN SEO Kit` and `# END SEO Kit` in the web root's `robots.txt`, creating the
-file if there is none, and never changes anything outside the block. If the file
+file if there is none (it then holds only this block, so keep the system-folder rules
+under **Other rules**), and never changes anything outside the block. If the file
 is not writable or the markers are damaged, nothing is written and the page shows
 the text to paste. Rules typed under **Other rules** that have no `User-agent` line
 are given `User-agent: *`, so they cannot attach to a bot above them.
