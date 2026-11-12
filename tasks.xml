@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<concrete5-cif version="1.0">
+    <tasks>
+        <task handle="seo_kit_audit" package="seo_kit" />
+    </tasks>
+
+    <tasksets>
+        <taskset handle="seo_kit" name="SEO Kit" package="seo_kit">
+            <task handle="seo_kit_audit" />
+        </taskset>
+    </tasksets>
+</concrete5-cif>
