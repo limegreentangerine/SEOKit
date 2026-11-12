@@ -3,9 +3,9 @@
 namespace SeoKit\Social;
 
 use SeoKit\Support\Files;
-use SeoKit\Support\ControllerValues;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Entity\File\File;
+use SeoKit\Support\ControllerValues;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Sharing\SocialNetwork\Link;

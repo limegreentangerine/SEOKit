@@ -102,12 +102,12 @@ $this->set('pageImage', $imageUrl);           // absolute URL
 $this->set('ogUrl', $recordUrl);              // absolute URL of this record
 ```
 
-| Variable          | Used for                                                                 |
-| ----------------- | ------------------------------------------------------------------------ |
-| `pageTitle`       | JSON-LD WebPage and last breadcrumb name, `og:title`, `twitter:title`    |
-| `pageDescription` | JSON-LD WebPage description, `og:description`, `twitter:description`     |
-| `pageImage`       | `og:image:url`, `twitter:image` (also the card type)                     |
-| `ogUrl`           | JSON-LD WebPage `url` and `@id`, last breadcrumb, `og:url`               |
+| Variable          | Used for                                                              |
+| ----------------- | --------------------------------------------------------------------- |
+| `pageTitle`       | JSON-LD WebPage and last breadcrumb name, `og:title`, `twitter:title` |
+| `pageDescription` | JSON-LD WebPage description, `og:description`, `twitter:description`  |
+| `pageImage`       | `og:image:url`, `twitter:image` (also the card type)                  |
+| `ogUrl`           | JSON-LD WebPage `url` and `@id`, last breadcrumb, `og:url`            |
 
 - `pageTitle` and `pageDescription` are the variables core already reads for
   the `<title>` and meta description, so one `set()` covers all of them.
