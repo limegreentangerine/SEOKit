@@ -3,10 +3,10 @@
 namespace SeoKit\JsonLd;
 
 use SeoKit\Support\Files;
-use SeoKit\Support\ControllerValues;
 use Concrete\Core\File\File;
 use Concrete\Core\Page\Page;
 use Psr\Log\LoggerInterface;
+use SeoKit\Support\ControllerValues;
 use SeoKit\JsonLd\Types\TypeRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Application\Application;
