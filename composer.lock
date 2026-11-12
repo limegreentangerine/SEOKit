@@ -58,16 +58,16 @@
         },
         {
             "name": "limegreentangerine/lgt_toolkit",
-            "version": "1.0.12",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/limegreentangerine/LGTToolkit.git",
-                "reference": "77e066286c242daf1860c7eec6431d88246540d7"
+                "reference": "f6372223e62fac4fed8f1b81e144c5541de52dd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/limegreentangerine/LGTToolkit/zipball/77e066286c242daf1860c7eec6431d88246540d7",
-                "reference": "77e066286c242daf1860c7eec6431d88246540d7",
+                "url": "https://api.github.com/repos/limegreentangerine/LGTToolkit/zipball/f6372223e62fac4fed8f1b81e144c5541de52dd3",
+                "reference": "f6372223e62fac4fed8f1b81e144c5541de52dd3",
                 "shasum": ""
             },
             "require": {
@@ -106,9 +106,9 @@
             "description": "LGT tools and defaults for Concrete CMS",
             "support": {
                 "issues": "https://github.com/limegreentangerine/LGTToolkit/issues",
-                "source": "https://github.com/limegreentangerine/LGTToolkit/tree/1.0.12"
+                "source": "https://github.com/limegreentangerine/LGTToolkit/tree/1.1.0"
             },
-            "time": "2026-11-11T14:18:29+00:00"
+            "time": "2026-11-12T10:54:05+00:00"
         },
         {
             "name": "php-debugbar/php-debugbar",

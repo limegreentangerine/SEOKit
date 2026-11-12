@@ -4,6 +4,7 @@ namespace SeoKit\Social;
 
 use HtmlObject\Element;
 use Concrete\Core\Page\Page;
+use SeoKit\Support\ControllerValues;
 use Concrete\Core\Sharing\OpenGraph\OpenGraph as CoreOpenGraph;
 
 /**
@@ -48,11 +49,21 @@ class OpenGraph extends CoreOpenGraph
             }
         }
 
-        if ($site->getSiteCanonicalURL()) {
+        // a controller's pageImage / ogUrl (a record shown by a single page) win over the page's own values
+        $url = ControllerValues::get($page, 'ogUrl');
+
+        if ($url !== '') {
+            $tags[] = $this->meta(self::TAG_OG_URL, $url);
+        } elseif ($site->getSiteCanonicalURL()) {
             $tags[] = $this->meta(self::TAG_OG_URL, (string) $this->resolverManager->resolve([$page]));
         }
 
-        $image = $social->imageFile($page, $site);
+        $pageImage = ControllerValues::get($page, 'pageImage');
+        $image = $pageImage === '' ? $social->imageFile($page, $site) : null;
+
+        if ($pageImage !== '') {
+            $tags[] = $this->meta(self::TAG_OG_IMAGE_URL, $pageImage);
+        }
 
         if ($image !== null) {
             $tags[] = $this->meta(self::TAG_OG_IMAGE_URL, (string) $image->getURL());

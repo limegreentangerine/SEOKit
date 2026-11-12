@@ -3,6 +3,7 @@
 namespace SeoKit\JsonLd;
 
 use SeoKit\Support\Files;
+use SeoKit\Support\ControllerValues;
 use Concrete\Core\File\File;
 use Concrete\Core\Page\Page;
 use Psr\Log\LoggerInterface;
@@ -61,15 +62,17 @@ class JsonLdService
             $crumbs[] = ['name' => (string) $parent->getCollectionName(), 'url' => (string) $parent->getCollectionLink()];
         }
 
-        $url = (string) $page->getCollectionLink();
-        $crumbs[] = ['name' => (string) $page->getCollectionName(), 'url' => $url];
+        // a controller's ogUrl / pageTitle / pageDescription describe the record a single page is showing
+        $url = ControllerValues::get($page, 'ogUrl') ?: (string) $page->getCollectionLink();
+        $name = ControllerValues::get($page, 'pageTitle') ?: (string) $page->getCollectionName();
+        $crumbs[] = ['name' => $name, 'url' => $url];
 
         $iso = static fn(string $date): string => $date === '' ? '' : (new \DateTimeImmutable($date))->format(DATE_ATOM);
 
         return [
             'url' => $url,
-            'name' => (string) $page->getCollectionName(),
-            'description' => (string) $page->getCollectionDescription(),
+            'name' => $name,
+            'description' => ControllerValues::get($page, 'pageDescription') ?: (string) $page->getCollectionDescription(),
             'inLanguage' => $this->language($section),
             'datePublished' => $iso((string) $page->getCollectionDatePublic()),
             'dateModified' => $iso((string) $page->getCollectionDateLastModified()),
