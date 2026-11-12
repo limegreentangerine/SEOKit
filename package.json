@@ -7,16 +7,16 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/limegreentangerine/seo_kit.git"
+		"url": "git+https://github.com/limegreentangerine/SEOKit.git"
 	},
 	"keywords": [],
-	"author": "",
-	"license": "UNLICENSED",
+	"author": "Dave Hendy <david@limegreentangerine.co.uk>",
+	"license": "ICS",
 	"type": "commonjs",
 	"bugs": {
-		"url": "https://github.com/limegreentangerine/seo_kit/issues"
+		"url": "https://github.com/limegreentangerine/SEOKit/issues"
 	},
-	"homepage": "https://github.com/limegreentangerine/seo_kit#readme",
+	"homepage": "https://github.com/limegreentangerine/SEOKit#readme",
 	"devDependencies": {
 		"prettier": "^3.9.6"
 	}
