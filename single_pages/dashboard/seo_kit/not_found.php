@@ -18,27 +18,34 @@ $pageUrl = static fn(int $n): string => h((string) URL::to('/dashboard/seo_kit/n
 <?php if (!$canRedirect) { ?>
     <div class="alert alert-warning"><?php echo t('Creating redirects needs the redirection tool in LGT Toolkit, which this site does not have yet. The list still works.'); ?></div>
 <?php } else { ?>
-    <form method="post" action="<?php echo h((string) $view->action('redirect')); ?>" class="card mb-4" id="seo-kit-redirect-form">
+    <form method="post" action="<?php echo h((string) $view->action('redirect')); ?>" id="seo-kit-redirect-form">
         <?php Core::make('token')->output('seo_kit_404_redirect'); ?>
         <input type="hidden" name="id" id="seo-kit-redirect-id" value="">
-        <div class="card-body">
-            <h3 class="fs-5"><?php echo t('Create a redirect'); ?></h3>
-            <p class="mb-3"><?php echo t('Press "Redirect" on a row to choose the address, then pick where it should go.'); ?>
-                <strong id="seo-kit-redirect-path" class="ms-1"></strong></p>
-            <div class="row g-3 align-items-end">
-                <div class="col-md-6">
-                    <label class="form-label"><?php echo t('Send visitors to'); ?></label>
-                    <?php echo Core::make('helper/form/page_selector')->selectPage('cID'); ?>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label" for="seo-kit-code"><?php echo t('Type'); ?></label>
-                    <select class="form-select" name="code" id="seo-kit-code">
-                        <option value="301"><?php echo t('301 Permanent'); ?></option>
-                        <option value="302"><?php echo t('302 Temporary'); ?></option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary" id="seo-kit-redirect-submit" disabled><?php echo t('Create redirect'); ?></button>
+        <div class="modal fade" id="seo-kit-redirect-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><?php echo t('Create a redirect'); ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo h(t('Close')); ?>"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><?php echo t('Redirect'); ?> <code id="seo-kit-redirect-path"></code></p>
+                        <div class="mb-3">
+                            <label class="form-label"><?php echo t('Send visitors to'); ?></label>
+                            <?php echo Core::make('helper/form/page_selector')->selectPage('cID'); ?>
+                        </div>
+                        <div>
+                            <label class="form-label" for="seo-kit-code"><?php echo t('Type'); ?></label>
+                            <select class="form-select" name="code" id="seo-kit-code">
+                                <option value="301"><?php echo t('301 Permanent'); ?></option>
+                                <option value="302"><?php echo t('302 Temporary'); ?></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo t('Cancel'); ?></button>
+                        <button type="submit" class="btn btn-primary"><?php echo t('Create redirect'); ?></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,7 +83,7 @@ $pageUrl = static fn(int $n): string => h((string) URL::to('/dashboard/seo_kit/n
                     <td><?php echo h((string) $row['referrerHost']); ?></td>
                     <td class="text-end text-nowrap">
                         <?php if ($canRedirect) { ?>
-                            <button type="button" class="btn btn-sm btn-primary seo-kit-pick" data-id="<?php echo (int) $row['id']; ?>" data-path="<?php echo h($row['path']); ?>"><?php echo t('Redirect'); ?></button>
+                            <button type="button" class="btn btn-sm btn-primary seo-kit-pick" data-bs-toggle="modal" data-bs-target="#seo-kit-redirect-modal" data-id="<?php echo (int) $row['id']; ?>" data-path="<?php echo h($row['path']); ?>"><?php echo t('Redirect'); ?></button>
                         <?php } ?>
                         <button type="submit" form="seo-kit-ignore-form" name="id" value="<?php echo (int) $row['id']; ?>" class="btn btn-sm btn-outline-secondary"><?php echo t('Ignore'); ?></button>
                     </td>
@@ -98,14 +105,11 @@ $pageUrl = static fn(int $n): string => h((string) URL::to('/dashboard/seo_kit/n
     (function () {
         var id = document.getElementById('seo-kit-redirect-id');
         var label = document.getElementById('seo-kit-redirect-path');
-        var submit = document.getElementById('seo-kit-redirect-submit');
 
         document.querySelectorAll('.seo-kit-pick').forEach(function (button) {
             button.addEventListener('click', function () {
                 id.value = button.getAttribute('data-id');
                 label.textContent = button.getAttribute('data-path');
-                submit.disabled = false;
-                document.getElementById('seo-kit-redirect-form').scrollIntoView({ behavior: 'smooth' });
             });
         });
     })();

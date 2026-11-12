@@ -85,6 +85,9 @@ list of objects, or an object with an `@graph` list. Any nested `@context` is
 dropped. A custom node with the same `@id` as a generated node replaces it;
 other nodes are appended. Invalid JSON is logged and skipped, never output.
 
+For adding JSON-LD from a single page controller, see
+[docs/single-page-json-ld.md](docs/single-page-json-ld.md).
+
 ## Robots directives
 
 The **Robots Directives** page attribute (SEO Kit set) adds a robots meta tag
@@ -145,6 +148,12 @@ SEO Kit improves on core in three ways:
 SEO Kit swaps core's `OpenGraph` class for its own subclass just before a page
 renders, so no `header_required.php` override is needed. A site that overrides
 `header_required.php` to use its own Open Graph class is unaffected.
+
+For setting titles, descriptions and extra meta tags from a single page
+controller, see [docs/single-page-meta-tags.md](docs/single-page-meta-tags.md).
+A single page that shows one record per URL sets `pageTitle`,
+`pageDescription`, `pageImage` and `ogUrl` so the JSON-LD and social tags
+describe the record, not the parent page.
 
 ### Search & Social Preview
 

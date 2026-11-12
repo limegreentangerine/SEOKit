@@ -3,6 +3,7 @@
 namespace SeoKit\Social;
 
 use SeoKit\Support\Files;
+use SeoKit\Support\ControllerValues;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Entity\File\File;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,12 +42,12 @@ class SocialService
 
     public function title(Page $page, object $site): string
     {
-        return $this->text($page, $site, 'field_og_title', 'title');
+        return ControllerValues::get($page, 'pageTitle') ?: $this->text($page, $site, 'field_og_title', 'title');
     }
 
     public function description(Page $page, object $site): string
     {
-        return $this->text($page, $site, 'field_og_description', 'description');
+        return ControllerValues::get($page, 'pageDescription') ?: $this->text($page, $site, 'field_og_description', 'description');
     }
 
     /**
@@ -86,7 +87,7 @@ class SocialService
 
     public function imageUrl(Page $page, object $site): string
     {
-        return Files::url($this->imageFile($page, $site));
+        return ControllerValues::get($page, 'pageImage') ?: Files::url($this->imageFile($page, $site));
     }
 
     /**

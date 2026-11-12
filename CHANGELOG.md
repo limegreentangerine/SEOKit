@@ -4,7 +4,11 @@ Notable changes to this project are documented here.
 
 ## 1.0.0
 
-First stable release. No changes since 0.9.0.
+First stable release.
+
+### Added
+
+- A single page that shows one record per URL can set `pageTitle`, `pageDescription`, `pageImage` and `ogUrl` in its controller. The JSON-LD WebPage node and breadcrumb, Open Graph and Twitter cards use them in place of the parent page's values. See `docs/single-page-meta-tags.md`.
 
 ## 0.9.0
 
