@@ -37,8 +37,8 @@ class AiCrawlerService
         $config = $this->config();
 
         return [
-            'blocked' => RobotsTxt::knownBots($config->get('seo_kit.ai.blocked', [])),
-            'custom' => RobotsTxt::cleanCustom($config->get('seo_kit.ai.custom', '')),
+            'blocked' => RobotsTxt::knownBots($config->get('seo_kit.ai.blocked', RobotsTxt::DEFAULT_BLOCKED)),
+            'custom' => RobotsTxt::cleanCustom($config->get('seo_kit.ai.custom', RobotsTxt::DEFAULT_CUSTOM)),
             'sitemap' => (bool) $config->get('seo_kit.ai.sitemap', true),
             'llms' => (bool) $config->get('seo_kit.ai.llms', false),
             'intro' => LlmsTxt::line($config->get('seo_kit.ai.intro', ''), LlmsTxt::INTRO_MAX),

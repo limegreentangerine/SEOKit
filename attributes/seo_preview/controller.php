@@ -4,10 +4,9 @@ namespace Concrete\Package\SeoKit\Attribute\SeoPreview;
 
 use Concrete\Core\Page\Page;
 use SeoKit\Social\SocialService;
-use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Attribute\Key\CollectionKey;
-use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
+use Concrete\Core\Attribute\{DefaultController, FontAwesomeIconFormatter};
 
 /**
  * An editor-only attribute: it shows how the page will look in Google and when shared, and updates as the

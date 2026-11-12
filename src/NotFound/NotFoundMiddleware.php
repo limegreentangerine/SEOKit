@@ -4,8 +4,7 @@ namespace SeoKit\NotFound;
 
 use Concrete\Core\Application\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Concrete\Core\Http\Middleware\DelegateInterface;
-use Concrete\Core\Http\Middleware\MiddlewareInterface;
+use Concrete\Core\Http\Middleware\{DelegateInterface, MiddlewareInterface};
 
 /**
  * Notes every GET or HEAD that ends in a 404. Runs after the response is built and fails open: a database problem

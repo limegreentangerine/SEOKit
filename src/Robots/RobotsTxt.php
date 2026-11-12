@@ -32,14 +32,19 @@ final class RobotsTxt
         'amazon' => ['label' => 'Amazonbot', 'agents' => ['Amazonbot'], 'use' => 'search'],
     ];
 
+    /**
+     * Blocked until the editor saves their own choice.
+     */
+    public const DEFAULT_BLOCKED = ['openai_training', 'anthropic_training', 'google_extended', 'apple_extended', 'common_crawl', 'meta', 'bytedance', 'amazon'];
+
+    /**
+     * Custom rules until the editor saves their own: keeps crawlers out of Concrete's system folders.
+     */
+    public const DEFAULT_CUSTOM = "User-agent: *\nDisallow: /dashboard/\nDisallow: /application/attributes\nDisallow: /application/authentication\nDisallow: /application/bootstrap\nDisallow: /application/config\nDisallow: /application/controllers\nDisallow: /application/elements\nDisallow: /application/jobs\nDisallow: /application/languages\nDisallow: /application/mail\nDisallow: /application/page_types\nDisallow: /application/page_templates\nDisallow: /application/single_pages\nDisallow: /application/tools\nDisallow: /application/views\nDisallow: /ccm/system/captcha/picture\nDisallow: /concrete\nDisallow: /packages\nDisallow: /updates";
+
     public const BEGIN = '# BEGIN SEO Kit';
 
     public const END = '# END SEO Kit';
-
-    /**
-     * Written when there is no robots.txt yet; an existing file keeps whatever it has.
-     */
-    public const NEW_FILE = "User-agent: *\nDisallow: /dashboard/\n";
 
     /**
      * Keeps only handles from BOTS, in the order BOTS lists them.
@@ -103,7 +108,7 @@ final class RobotsTxt
     public static function merge(?string $existing, string $block): ?string
     {
         if ($existing === null || trim($existing) === '') {
-            return $block === '' ? self::NEW_FILE : self::NEW_FILE . "\n" . $block;
+            return $block;
         }
 
         $begin = substr_count($existing, self::BEGIN);

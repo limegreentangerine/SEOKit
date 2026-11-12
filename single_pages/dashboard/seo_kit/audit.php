@@ -12,6 +12,12 @@ $severityTone = ['error' => 'danger', 'warning' => 'warning', 'notice' => 'secon
 $when = static fn(int $time): string => $dh->formatDateTime((new DateTime('@' . $time)), true);
 ?>
 
+<form method="post" action="<?php echo h((string) $view->action('run')); ?>" class="mb-4">
+    <?php Core::make('token')->output('seo_kit_audit_run'); ?>
+    <button type="submit" class="btn btn-primary" onclick="this.disabled = true; this.form.submit();"><?php echo t('Run audit'); ?></button>
+    <span class="text-muted ms-2"><?php echo t('Audits every published page now. This can take a while on large sites.'); ?></span>
+</form>
+
 <?php if ($latest === null) { ?>
     <div class="alert alert-info">
         <p class="mb-2"><strong><?php echo t('No audit has run yet.'); ?></strong></p>
@@ -41,7 +47,6 @@ $when = static fn(int $time): string => $dh->formatDateTime((new DateTime('@' . 
                         <span class="badge text-bg-secondary"><?php echo t2('%d notice', '%d notices', $latest->getNoticeCount(), $latest->getNoticeCount()); ?></span>
                     </p>
                     <a class="btn btn-secondary btn-sm" href="<?php echo h($view->action('export', $exportToken)); ?>"><?php echo t('Download CSV'); ?></a>
-                    <span class="text-muted ms-2"><?php echo t('Run the audit again from %s.', '<a href="' . h((string) URL::to('/dashboard/system/automation/tasks')) . '">' . t('Automation') . '</a>'); ?></span>
                 </div>
             </div>
         </div>

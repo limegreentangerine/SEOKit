@@ -2,15 +2,13 @@
 
 namespace SeoKit\Audit;
 
-use SeoKit\Entity\AuditRun;
-use Concrete\Core\Page\Page;
-use SeoKit\Entity\AuditFinding;
 use SeoKit\JsonLd\CustomJsonLd;
-use Concrete\Core\Page\PageList;
 use SeoKit\Social\SocialService;
 use SeoKit\JsonLd\Types\TypeRegistry;
+use Concrete\Core\Page\{Page, PageList};
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Application\Application;
+use SeoKit\Entity\{AuditFinding, AuditRun};
 
 /**
  * Runs an audit and reads its results. The rules and scoring live in Checks and Scorer; this class gathers each

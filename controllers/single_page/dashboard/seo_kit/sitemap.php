@@ -3,9 +3,8 @@
 namespace Concrete\Package\SeoKit\Controller\SinglePage\Dashboard\SeoKit;
 
 use Permissions;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Page\PageList;
 use SeoKit\Sitemap\SitemapValues;
+use Concrete\Core\Page\{Page, PageList};
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Page\Controller\DashboardPageController;

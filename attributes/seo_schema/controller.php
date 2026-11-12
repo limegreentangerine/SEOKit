@@ -4,9 +4,8 @@ namespace Concrete\Package\SeoKit\Attribute\SeoSchema;
 
 use SeoKit\JsonLd\Types\TypeRegistry;
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Attribute\DefaultController;
-use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
+use Concrete\Core\Attribute\{DefaultController, FontAwesomeIconFormatter};
 
 /**
  * Page attribute holding one schema type and its fields, stored as JSON (see TypeRegistry).

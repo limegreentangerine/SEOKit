@@ -2,8 +2,7 @@
 
 namespace Concrete\Package\SeoKit\Controller\SinglePage\Dashboard\SeoKit;
 
-use SeoKit\Robots\RobotsTxt;
-use SeoKit\Robots\AiCrawlerService;
+use SeoKit\Robots\{AiCrawlerService, RobotsTxt};
 use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Ai extends DashboardPageController

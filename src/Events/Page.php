@@ -7,11 +7,10 @@ use Illuminate\Support\Str;
 use SeoKit\Robots\RobotsMeta;
 use Concrete\Core\Http\Request;
 use SeoKit\JsonLd\JsonLdService;
-use SeoKit\Social\SocialService;
 use Concrete\Core\Page\Page as ConcretePage;
-use SeoKit\Social\OpenGraph as SeoKitOpenGraph;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Concrete\Core\Sharing\OpenGraph\OpenGraph as CoreOpenGraph;
+use SeoKit\Social\{OpenGraph as SeoKitOpenGraph, SocialService};
 
 /**
  * Handles page-level event hooks for SEO output.

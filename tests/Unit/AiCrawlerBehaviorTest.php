@@ -50,8 +50,8 @@ final class AiCrawlerBehaviorTest extends TestCase
     {
         $block = RobotsTxt::block(['openai_training']);
 
-        $this->assertSame(RobotsTxt::NEW_FILE . "\n" . $block, RobotsTxt::merge(null, $block));
-        $this->assertSame(RobotsTxt::NEW_FILE, RobotsTxt::merge('', ''));
+        $this->assertSame($block, RobotsTxt::merge(null, $block));
+        $this->assertSame('', RobotsTxt::merge('', ''));
     }
 
     public function testMergeAppendsAfterAnExistingFileAndKeepsItIntact(): void
