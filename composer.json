@@ -1,6 +1,6 @@
 {
 	"name": "limegreentangerine/seo_kit",
-	"description": "SEO kit for Concrete5",
+	"description": "Structured data and SEO tools for Concrete CMS",
 	"type": "concrete5-package",
 	"license": "proprietary",
 	"minimum-stability": "stable",
