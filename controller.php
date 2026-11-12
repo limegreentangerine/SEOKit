@@ -27,7 +27,7 @@ class Controller extends PackageController
 
     protected $pkgHandle = 'seo_kit';
 
-    protected $pkgVersion = '0.8.0';
+    protected $pkgVersion = '0.9.0';
 
     protected $appVersionRequired = '9.5.0';
 
